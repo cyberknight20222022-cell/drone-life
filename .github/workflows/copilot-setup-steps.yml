@@ -1,0 +1,27 @@
+name: "Copilot Setup Steps"
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - .github/workflows/copilot-setup-steps.yml
+  pull_request:
+    paths:
+      - .github/workflows/copilot-setup-steps.yml
+
+jobs:
+  copilot-setup-steps:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+
+    # Before running this workflow, add your SSH private key as a repository
+    # secret named SSH_PRIVATE_KEY (Settings > Secrets and variables > Actions).
+    # The SSH agent started here makes the key available to all subsequent
+    # steps and to Copilot cloud agent when it runs in this environment.
+    steps:
+      - name: Set up SSH agent
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
