@@ -48,9 +48,14 @@ class PID:
 
         error = self.setpoint - measured
 
-        self._integral += error * dt
         derivative = (error - self._prev_error) / dt
         self._prev_error = error
+
+        # Accumulate integral only when the output is not saturated
+        # (anti-windup: conditional integration)
+        unsaturated_output = self.kp * error + self.ki * self._integral + self.kd * derivative
+        if self._min_out < unsaturated_output < self._max_out:
+            self._integral += error * dt
 
         output = self.kp * error + self.ki * self._integral + self.kd * derivative
         return max(self._min_out, min(self._max_out, output))

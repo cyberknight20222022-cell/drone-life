@@ -19,7 +19,7 @@ loop_hz = 100          # target loop rate
 loop_period_ms = 1000 // loop_hz
 dt = loop_period_ms / 1000.0
 
-throttle = 0.0         # set > 0.0 to spin motors
+throttle = 0.0         # set > 0.0 to spin motors; kept at 0 by default for safety
 
 print("Flight controller ready. Loop rate:", loop_hz, "Hz")
 

@@ -47,7 +47,7 @@ class Motors:
             m1..m4: throttle in the range [0.0, 1.0].
         """
         values = (m1, m2, m3, m4)
-        for i, (pwm, val) in enumerate(zip(self._pwms, values)):
+        for pwm, val in zip(self._pwms, values):
             val = max(0.0, min(1.0, val))
             us = int(_ESC_MIN_US + val * (_ESC_MAX_US - _ESC_MIN_US))
             pwm.duty_u16(_us_to_duty(us))

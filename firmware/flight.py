@@ -1,5 +1,6 @@
 """Flight control loop for XIAO RP2040 PCB drone."""
 
+import math
 import time
 from imu import MPU6050
 from motors import Motors
@@ -51,12 +52,12 @@ class FlightController:
 
     def run_once(self, throttle: float, dt: float) -> None:
         """Execute one iteration of the stabilisation loop."""
-        ax, ay, _ = self._imu.read_accel()
+        ax, ay, az = self._imu.read_accel()
 
-        # Approximate roll/pitch from accelerometer (static approximation)
-        import math
-        roll_measured = math.atan2(ay, 1.0)
-        pitch_measured = math.atan2(ax, 1.0)
+        # Roll: rotation around the X-axis; Pitch: rotation around the Y-axis.
+        # Using the standard formulas for accurate results at any tilt angle.
+        roll_measured = math.atan2(ay, az)
+        pitch_measured = math.atan2(-ax, math.sqrt(ay * ay + az * az))
 
         roll_out = self._roll_pid.update(roll_measured, dt)
         pitch_out = self._pitch_pid.update(pitch_measured, dt)
